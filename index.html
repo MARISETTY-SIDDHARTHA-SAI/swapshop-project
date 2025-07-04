@@ -1,45 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>SwapShop - Local Used Goods Exchange</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SwapShop - Local Goods Exchange</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- FontAwesome for icons -->
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </head>
 <body>
-  <header><h1>SwapShop</h1><p>Buy, Sell & Swap Items Locally</p></header>
+  <div class="hero">
+    <h1>Welcome to SwapShop</h1>
+    <p>Buy, Sell & Swap Items Locally</p>
+  </div>
 
   <div class="search-filter">
-    <input id="searchInput" placeholder="Search items...">
+    <input id="searchInput" placeholder="🔍 Search items..." />
     <select id="conditionFilter">
       <option value="">All Conditions</option>
       <option>Good</option><option>Fair</option><option>Like New</option>
     </select>
   </div>
 
-  <main class="items-grid">
-    <!-- item cards injected here -->
-  </main>
+  <main class="items-grid"></main>
 
   <section class="add-item">
     <h2>Add New Item</h2>
     <form id="addItemForm">
-      <input id="itemName" placeholder="Item Name" required>
+      <input id="itemName" placeholder="Item Name" required />
       <select id="itemCondition" required>
         <option value="" disabled selected>Select Condition</option>
         <option>Good</option><option>Fair</option><option>Like New</option>
       </select>
-      <input id="itemImage" placeholder="Image URL" required>
+      <input id="itemImage" placeholder="Image URL (or leave blank)" />
       <button type="submit" class="btn-primary">Add Item</button>
     </form>
   </section>
 
+  <section class="contact">
+    <h2>Contact Support</h2>
+    <button id="openChatBtn" class="btn-secondary"><i class="fas fa-envelope"></i> Email Us</button>
+  </section>
+
+  <!-- Chat Modal -->
   <div id="chatModal" class="modal">
     <div class="modal-content">
       <span class="close">&times;</span>
-      <h3>Chat Support</h3>
-      <textarea placeholder="Type your message..."></textarea>
-      <button class="btn-primary">Send</button>
+      <h3>Send us an email</h3>
+      <form id="emailForm">
+        <input type="email" id="toEmail" placeholder="Your Email" required />
+        <textarea id="emailMsg" placeholder="Your Message" rows="5" required></textarea>
+        <button type="submit" class="btn-primary">Send Email</button>
+      </form>
     </div>
   </div>
 
