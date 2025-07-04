@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,79 +10,139 @@
 <body>
   <header>
     <h1>SwapShop</h1>
-    <p>Your local app to buy, sell, or swap used items</p>
+    <p>Your local platform to buy, sell, and swap used items.</p>
   </header>
 
-  <main>
-    <section class="item-list">
-      <h2>Available Items</h2>
-      <div class="items">
-        <div class="item-card">
-          <img src="https://via.placeholder.com/150" alt="Used Book" />
-          <h3>Used Book</h3>
-          <p>Condition: Good</p>
-          <button class="swap-btn">Swap</button>
-          <button class="buy-btn">Buy</button>
-        </div>
+  <section class="item-list">
+    <div class="search-filter">
+      <input type="text" id="searchInput" placeholder="Search items..." />
+      <select id="conditionFilter">
+        <option value="">All Conditions</option>
+        <option value="Good">Good</option>
+        <option value="Fair">Fair</option>
+        <option value="Like New">Like New</option>
+      </select>
+    </div>
 
-        <div class="item-card">
-          <img src="https://via.placeholder.com/150" alt="Old Chair" />
-          <h3>Old Chair</h3>
-          <p>Condition: Fair</p>
-          <button class="swap-btn">Swap</button>
-          <button class="buy-btn">Buy</button>
-        </div>
-
-        <div class="item-card">
-          <img src="https://via.placeholder.com/150" alt="Smartphone" />
-          <h3>Smartphone</h3>
-          <p>Condition: Like New</p>
-          <button class="swap-btn">Swap</button>
-          <button class="buy-btn">Buy</button>
-        </div>
+    <div class="items">
+      <div class="item-card">
+        <img src="https://via.placeholder.com/150" alt="Used Bicycle" />
+        <h3>Used Bicycle</h3>
+        <p>Condition: Good</p>
+        <button class="swap-btn">Swap</button>
+        <button class="buy-btn">Buy</button>
       </div>
-    </section>
+      <div class="item-card">
+        <img src="https://via.placeholder.com/150" alt="Old Books" />
+        <h3>Old Books</h3>
+        <p>Condition: Fair</p>
+        <button class="swap-btn">Swap</button>
+        <button class="buy-btn">Buy</button>
+      </div>
+      <div class="item-card">
+        <img src="https://via.placeholder.com/150" alt="Gaming Console" />
+        <h3>Gaming Console</h3>
+        <p>Condition: Like New</p>
+        <button class="swap-btn">Swap</button>
+        <button class="buy-btn">Buy</button>
+      </div>
+    </div>
+  </section>
 
-    <section class="contact">
-      <h2>Contact Us</h2>
-      <p>Have questions? Chat with store owners directly inside the app!</p>
-      <button id="contactBtn">Open Chat</button>
-    </section>
-  </main>
+  <section class="contact">
+    <h2>Contact</h2>
+    <p>Email: support@swapshop.com</p>
+    <button id="openChatBtn">Chat with Support</button>
+  </section>
 
-  <!-- Modal for Chat -->
+  <section class="add-item">
+    <h2>Add New Item</h2>
+    <form id="addItemForm">
+      <input type="text" id="itemName" placeholder="Item Name" required />
+      <select id="itemCondition" required>
+        <option value="" disabled selected>Select Condition</option>
+        <option value="Good">Good</option>
+        <option value="Fair">Fair</option>
+        <option value="Like New">Like New</option>
+      </select>
+      <input type="url" id="itemImage" placeholder="Image URL" required />
+      <button type="submit">Add Item</button>
+    </form>
+  </section>
+
+  <!-- Chat Modal -->
   <div id="chatModal" class="modal">
     <div class="modal-content">
-      <span id="closeModal" class="close">&times;</span>
-      <h3>Chat with Store Owner</h3>
-      <textarea placeholder="Write your message here..."></textarea>
-      <button>Send</button>
+      <span id="closeChatBtn" class="close">&times;</span>
+      <h3>Chat Support</h3>
+      <textarea placeholder="Type your message..." rows="5"></textarea>
+      <button id="sendMessageBtn">Send</button>
     </div>
   </div>
 
-  <footer>
-    <p>© 2025 SwapShop - Local Goods Exchange</p>
-  </footer>
-
   <script>
-    // Simple modal toggle script
-    const modal = document.getElementById('chatModal');
-    const openBtn = document.getElementById('contactBtn');
-    const closeBtn = document.getElementById('closeModal');
+    // Chat modal open/close
+    const chatModal = document.getElementById('chatModal');
+    const openChatBtn = document.getElementById('openChatBtn');
+    const closeChatBtn = document.getElementById('closeChatBtn');
 
-    openBtn.onclick = () => {
-      modal.style.display = 'block';
-    };
+    openChatBtn.onclick = () => chatModal.style.display = 'block';
+    closeChatBtn.onclick = () => chatModal.style.display = 'none';
+    window.onclick = (e) => { if(e.target === chatModal) chatModal.style.display = 'none'; };
 
-    closeBtn.onclick = () => {
-      modal.style.display = 'none';
-    };
+    // Filter items
+    const searchInput = document.getElementById('searchInput');
+    const conditionFilter = document.getElementById('conditionFilter');
+    const itemsContainer = document.querySelector('.items');
 
-    window.onclick = (event) => {
-      if (event.target === modal) {
-        modal.style.display = 'none';
-      }
-    };
+    function filterItems() {
+      const searchText = searchInput.value.toLowerCase();
+      const conditionValue = conditionFilter.value;
+
+      const itemCards = itemsContainer.querySelectorAll('.item-card');
+
+      itemCards.forEach(card => {
+        const title = card.querySelector('h3').textContent.toLowerCase();
+        const condition = card.querySelector('p').textContent.replace('Condition: ', '');
+
+        const matchesSearch = title.includes(searchText);
+        const matchesCondition = conditionValue === '' || condition === conditionValue;
+
+        card.style.display = (matchesSearch && matchesCondition) ? 'block' : 'none';
+      });
+    }
+
+    searchInput.addEventListener('input', filterItems);
+    conditionFilter.addEventListener('change', filterItems);
+
+    // Add new item
+    const addItemForm = document.getElementById('addItemForm');
+
+    addItemForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById('itemName').value.trim();
+      const condition = document.getElementById('itemCondition').value;
+      const imageUrl = document.getElementById('itemImage').value.trim();
+
+      if (!name || !condition || !imageUrl) return;
+
+      const newCard = document.createElement('div');
+      newCard.classList.add('item-card');
+
+      newCard.innerHTML = `
+        <img src="${imageUrl}" alt="${name}" />
+        <h3>${name}</h3>
+        <p>Condition: ${condition}</p>
+        <button class="swap-btn">Swap</button>
+        <button class="buy-btn">Buy</button>
+      `;
+
+      itemsContainer.appendChild(newCard);
+
+      addItemForm.reset();
+      filterItems(); // reapply filters to show new item if it matches
+    });
   </script>
 </body>
 </html>
