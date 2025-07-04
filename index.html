@@ -1,66 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>SwapShop - Local Exchange</title>
-  <link rel="stylesheet" href="style.css" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SwapShop | Swap, Sell & Donate</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css" />
+<script src="https://cdn.emailjs.com/sdk/3.6.2/email.min.js"></script>
 </head>
 <body>
-  <header class="hero">
-    <h1>SwapShop</h1>
-    <p>Swap, Sell, or Donate Locally</p>
-  </header>
+<header>
+  <div class="container header-container">
+    <h1 class="app-title">Swap<span class="highlight">Shop</span></h1>
+    <p class="tagline">Swap, Sell & Donate Locally</p>
+  </div>
+</header>
 
+<main class="container">
   <section class="search-filter">
     <input id="searchInput" placeholder="Search items..." />
     <select id="conditionFilter">
-      <option value="">All</option>
-      <option>Good</option>
-      <option>Fair</option>
-      <option>Like New</option>
+      <option value="">All Conditions</option>
+      <option value="Good">Good</option>
+      <option value="Fair">Fair</option>
+      <option value="Like New">Like New</option>
     </select>
   </section>
 
-  <main class="items-grid"></main>
+  <section id="itemsList" class="items-list"></section>
 
-  <section class="add-item">
-    <h2>Add Item</h2>
-    <form id="addItemForm">
+  <section class="add-item-section">
+    <h2>Add New Item</h2>
+    <form id="addItemForm" class="add-item-form">
       <input id="itemName" placeholder="Item Name" required />
       <select id="itemCondition" required>
         <option value="" disabled selected>Select Condition</option>
-        <option>Good</option>
-        <option>Fair</option>
-        <option>Like New</option>
+        <option value="Good">Good</option>
+        <option value="Fair">Fair</option>
+        <option value="Like New">Like New</option>
       </select>
-      <button type="submit">Add</button>
+      <button type="submit" class="btn-primary">Add Item</button>
     </form>
   </section>
 
-  <section class="chat-support">
-    <h2>Need Help?</h2>
-    <button id="openChatBtn">Contact Support</button>
+  <section class="contact-section">
+    <h2>Contact Support</h2>
+    <form id="contactForm" class="contact-form">
+      <input type="email" id="email" placeholder="Your Email" required />
+      <textarea id="message" placeholder="Your Message" rows="4" required></textarea>
+      <button type="submit" class="btn-primary">Send Message</button>
+    </form>
+    <p id="emailStatus" class="email-status"></p>
   </section>
+</main>
 
-  <!-- Modal -->
-  <div id="chatModal" class="modal">
-    <div class="modal-content">
-      <span class="close">&times;</span>
-      <h3>Send Us a Message</h3>
-      <form id="emailForm">
-        <input type="email" id="toEmail" placeholder="Your Email" required />
-        <textarea id="emailMsg" placeholder="Your Message" rows="4" required></textarea>
-        <button type="submit">Send</button>
-      </form>
-    </div>
-  </div>
+<footer>
+  <p>© 2025 SwapShop. All rights reserved.</p>
+</footer>
 
-  <footer>
-    © 2025 SwapShop. All rights reserved.
-  </footer>
-
-  <script src="app.js"></script>
+<script src="app.js"></script>
+<script>
+  (function(){
+    emailjs.init('YOUR_EMAILJS_USERID'); // Replace with your EmailJS User ID
+  })();
+</script>
 </body>
 </html>
+
 
