@@ -64,33 +64,30 @@ addItemForm.addEventListener("submit", (e) => {
 searchInput.addEventListener("input", filterItems);
 conditionFilter.addEventListener("change", filterItems);
 
-// EmailJS send email
+// EmailJS config
+const serviceID = "swapshop06";       // Your EmailJS service ID
+const templateID = "template_8rnhim7"; // Your EmailJS template ID
+
+// Email send handler
 contactForm.addEventListener("submit", function (e) {
   e.preventDefault();
   emailStatus.style.color = "#0077cc";
   emailStatus.textContent = "Sending message...";
 
-  const serviceID = "default_service";
-  const templateID = "template_swapshop";
-
-  emailjs
-    .sendForm(serviceID, templateID, this)
-    .then(
-      () => {
-        emailStatus.style.color = "green";
-        emailStatus.textContent = "Message sent successfully!";
-        contactForm.reset();
-      },
-      (err) => {
-        emailStatus.style.color = "red";
-        emailStatus.textContent =
-          "Failed to send message, please try again later.";
-        console.error("EmailJS error:", err);
-      }
-    );
+  emailjs.sendForm(serviceID, templateID, this)
+    .then(() => {
+      emailStatus.style.color = "green";
+      emailStatus.textContent = "Message sent successfully!";
+      contactForm.reset();
+    }, (err) => {
+      emailStatus.style.color = "red";
+      emailStatus.textContent = "Failed to send message, please try again later.";
+      console.error("EmailJS error:", err);
+    });
 });
 
 // Initial render
 renderItems(items);
+
 
 
