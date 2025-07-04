@@ -1,65 +1,96 @@
-const itemsGrid = document.querySelector('.items-grid');
-const searchInput = document.getElementById('searchInput');
-const conditionFilter = document.getElementById('conditionFilter');
-const addItemForm = document.getElementById('addItemForm');
-
-const chatModal = document.getElementById('chatModal');
-const openChatBtn = document.getElementById('openChatBtn');
-const closeChatBtn = document.querySelector('.close');
-const emailForm = document.getElementById('emailForm');
-
+// Items data
 let items = [
-  { name: 'Old Books', cond: 'Fair' },
-  { name: 'Winter Jacket', cond: 'Good' },
-  { name: 'Study Lamp', cond: 'Like New' }
+  { name: "Old Books", condition: "Fair" },
+  { name: "Winter Jacket", condition: "Good" },
+  { name: "Study Lamp", condition: "Like New" },
 ];
 
-function renderItems(filteredItems = items) {
-  itemsGrid.innerHTML = '';
-  filteredItems.forEach(item => {
-    const card = document.createElement('div');
-    card.className = 'card';
-    card.innerHTML = `
-      <h3>${item.name}</h3>
-      <p>Condition: ${item.cond}</p>
+// DOM elements
+const itemsList = document.getElementById("itemsList");
+const searchInput = document.getElementById("searchInput");
+const conditionFilter = document.getElementById("conditionFilter");
+const addItemForm = document.getElementById("addItemForm");
+const contactForm = document.getElementById("contactForm");
+const emailStatus = document.getElementById("emailStatus");
+
+// Render item list
+function renderItems(list) {
+  itemsList.innerHTML = "";
+
+  if (list.length === 0) {
+    itemsList.innerHTML = `<p style="text-align:center; color:#666; font-style:italic;">No items found.</p>`;
+    return;
+  }
+
+  list.forEach((item) => {
+    const div = document.createElement("div");
+    div.className = "item-row";
+    div.innerHTML = `
+      <div class="item-name">${item.name}</div>
+      <div class="item-condition">${item.condition}</div>
     `;
-    itemsGrid.appendChild(card);
+    itemsList.appendChild(div);
   });
 }
 
+// Filter items on search and condition
 function filterItems() {
   const keyword = searchInput.value.toLowerCase();
-  const cond = conditionFilter.value;
-  const filtered = items.filter(item =>
-    item.name.toLowerCase().includes(keyword) &&
-    (!cond || item.cond === cond)
-  );
+  const condition = conditionFilter.value;
+
+  const filtered = items.filter((item) => {
+    const matchName = item.name.toLowerCase().includes(keyword);
+    const matchCondition = !condition || item.condition === condition;
+    return matchName && matchCondition;
+  });
+
   renderItems(filtered);
 }
 
-addItemForm.addEventListener('submit', e => {
+// Add item handler
+addItemForm.addEventListener("submit", (e) => {
   e.preventDefault();
-  const name = document.getElementById('itemName').value.trim();
-  const cond = document.getElementById('itemCondition').value;
-  if (name && cond) {
-    items.push({ name, cond });
+  const name = document.getElementById("itemName").value.trim();
+  const condition = document.getElementById("itemCondition").value;
+
+  if (name && condition) {
+    items.push({ name, condition });
     filterItems();
     addItemForm.reset();
   }
 });
 
-searchInput.addEventListener('input', filterItems);
-conditionFilter.addEventListener('change', filterItems);
+// Search and filter listeners
+searchInput.addEventListener("input", filterItems);
+conditionFilter.addEventListener("change", filterItems);
 
-openChatBtn.onclick = () => {
-  chatModal.style.display = 'flex';
-};
+// EmailJS send email
+contactForm.addEventListener("submit", function (e) {
+  e.preventDefault();
+  emailStatus.style.color = "#0077cc";
+  emailStatus.textContent = "Sending message...";
 
-closeChatBtn.onclick = () => {
-  chatModal.style.display = 'none';
-};
+  const serviceID = "default_service";
+  const templateID = "template_swapshop";
 
-window.onclick = (e) => {
-  if (e.target === chatModal) {
-    chatModal
+  emailjs
+    .sendForm(serviceID, templateID, this)
+    .then(
+      () => {
+        emailStatus.style.color = "green";
+        emailStatus.textContent = "Message sent successfully!";
+        contactForm.reset();
+      },
+      (err) => {
+        emailStatus.style.color = "red";
+        emailStatus.textContent =
+          "Failed to send message, please try again later.";
+        console.error("EmailJS error:", err);
+      }
+    );
+});
+
+// Initial render
+renderItems(items);
+
 
