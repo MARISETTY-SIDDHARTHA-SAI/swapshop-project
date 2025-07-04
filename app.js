@@ -1,50 +1,127 @@
+// DOM Elements
 const itemsGrid = document.querySelector('.items-grid');
 const searchInput = document.getElementById('searchInput');
 const conditionFilter = document.getElementById('conditionFilter');
+const addItemForm = document.getElementById('addItemForm');
 
 const chatModal = document.getElementById('chatModal');
-const openChatBtn = document.querySelector('#openChatBtn') || document.createElement('button');
-const closeChatBtn = chatModal.querySelector('.close');
+const openChatBtn = document.getElementById('openChatBtn');
+const closeChatBtn = document.querySelector('.close');
+const emailForm = document.getElementById('emailForm');
 
-// Dummy data
+// Item data array
 let items = [
-  {name:'Vintage Camera', cond:'Good', img:'https://via.placeholder.com/150'}, 
-  {name:'Board Game', cond:'Like New', img:'https://via.placeholder.com/150'},
-  {name:'Old Vinyl', cond:'Fair', img:'https://via.placeholder.com/150'}
+  {
+    name: '🎧 Headphones',
+    cond: 'Good',
+    img: 'https://cdn-icons-png.flaticon.com/512/727/727269.png',
+  },
+  {
+    name: '📚 Book Set',
+    cond: 'Like New',
+    img: 'https://cdn-icons-png.flaticon.com/512/337/337946.png',
+  },
+  {
+    name: '🎮 Game Controller',
+    cond: 'Fair',
+    img: 'https://cdn-icons-png.flaticon.com/512/833/833472.png',
+  },
 ];
 
-function renderItems(list) {
+// Function to render items
+function renderItems(filteredItems) {
   itemsGrid.innerHTML = '';
-  list.forEach(it => {
-    const div = document.createElement('div'); div.className = 'card';
-    div.innerHTML = `
-      <img src="${it.img}" alt="${it.name}">
+
+  filteredItems.forEach((item) => {
+    const card = document.createElement('div');
+    card.className = 'card';
+
+    card.innerHTML = `
+      <img src="${item.img || 'https://via.placeholder.com/250x160'}" alt="${item.name}" />
       <div class="details">
-        <h3>${it.name}</h3>
-        <p>Condition: ${it.cond}</p>
+        <h3>${item.name}</h3>
+        <p>Condition: ${item.cond}</p>
         <div class="actions">
           <button class="swap">Swap</button>
           <button class="buy">Buy</button>
         </div>
-      </div>`;
-    itemsGrid.append(div);
+      </div>
+    `;
+
+    itemsGrid.appendChild(card);
   });
 }
 
+// Filter logic
 function filterItems() {
-  const term = searchInput.value.toLowerCase();
-  const condVal = conditionFilter.value;
-  renderItems(items.filter(i => i.name.toLowerCase().includes(term) && (!condVal || i.cond === condVal)));
+  const keyword = searchInput.value.toLowerCase();
+  const condition = conditionFilter.value;
+
+  const filtered = items.filter((item) => {
+    const matchesName = item.name.toLowerCase().includes(keyword);
+    const matchesCond = condition ? item.cond === condition : true;
+    return matchesName && matchesCond;
+  });
+
+  renderItems(filtered);
 }
 
+// Add new item to list
+addItemForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+
+  const name = document.getElementById('itemName').value.trim();
+  const cond = document.getElementById('itemCondition').value;
+  const img = document.getElementById('itemImage').value.trim();
+
+  if (name && cond) {
+    items.push({
+      name,
+      cond,
+      img: img || 'https://via.placeholder.com/250x160',
+    });
+
+    addItemForm.reset();
+    filterItems(); // re-render with new item
+  }
+});
+
+// Search and filter events
 searchInput.addEventListener('input', filterItems);
 conditionFilter.addEventListener('change', filterItems);
 
-// Modal events
-document.body.addEventListener('click', e => {
-  if(e.target.classList.contains('btn-primary') || e.target.id === 'openChatBtn') chatModal.style.display = 'flex';
+// Open chat modal
+openChatBtn.addEventListener('click', () => {
+  chatModal.style.display = 'flex';
 });
-closeChatBtn.onclick = () => chatModal.style.display = 'none';
-window.onclick = e => { if(e.target === chatModal) chatModal.style.display = 'none'; };
 
+// Close chat modal
+closeChatBtn.addEventListener('click', () => {
+  chatModal.style.display = 'none';
+});
+
+// Close modal if click outside of it
+window.addEventListener('click', (e) => {
+  if (e.target === chatModal) {
+    chatModal.style.display = 'none';
+  }
+});
+
+// Email form functionality
+emailForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+
+  const fromEmail = document.getElementById('toEmail').value.trim();
+  const message = document.getElementById('emailMsg').value.trim();
+
+  if (fromEmail && message) {
+    // Opens user's default email app with prefilled message
+    window.location.href = `mailto:marisiddharthasai@gmail.com?subject=Support Request from ${fromEmail}&body=${encodeURIComponent(message)}`;
+
+    chatModal.style.display = 'none';
+    emailForm.reset();
+  }
+});
+
+// Initial load
 renderItems(items);
